@@ -24,7 +24,7 @@ const ArtistItem: React.FC<Props> = ({name, image, id}) => {
     return (
         <Grid
           item sm md={6} lg={4}
-          component={Link} to={'/artist/' + id}
+          component={Link} to={'/albums/' + id}
           sx={{textDecoration: 'none'}}
         >
             <Card sx={{height: '100%'}}>

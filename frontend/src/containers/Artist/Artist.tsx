@@ -26,7 +26,6 @@ const Artist = () => {
                       key={artist._id}
                       id={artist._id}
                       name={artist.name}
-                      info={artist.info}
                       image={artist.image}
                     />
                 ))}
