@@ -5,7 +5,7 @@ const ArtistSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    photo: String,
+    image: String,
     info: String,
 });
 

@@ -17,7 +17,11 @@ const TrackSchema = new mongoose.Schema({
            message: 'Track does not exist!',
        }
    },
-    duration: String
+    duration: String,
+    number: {
+       type: Number,
+        required: true,
+    }
 });
 
 
