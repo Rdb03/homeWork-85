@@ -1,13 +1,13 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectArtist } from '../../app/artistSlice';
 import { useEffect } from 'react';
 import { fetchArtist } from '../../app/artistThunk';
 import { Grid, Typography } from '@mui/material';
 import ArtistItem from './ArtistItem';
+import { selectArtists } from '../../app/artistSlice.ts';
 
 const Artist = () => {
     const dispatch = useAppDispatch();
-    const artists = useAppSelector(selectArtist);
+    const artists = useAppSelector(selectArtists);
 
     useEffect(() => {
         dispatch(fetchArtist());

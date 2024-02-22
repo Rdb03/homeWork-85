@@ -6,15 +6,16 @@ import {AlbumMutation} from "../type";
 
 const albumRouter = express.Router();
 
-albumRouter.get('/', async (req , res) => {
+albumRouter.get('/', async (req, res) => {
     try {
         const artistId = req.query.artist as string;
+
         let albums;
 
         if (artistId) {
-            albums = await Album.find({ artist: artistId });
+            albums = await Album.find({ artist: artistId }).sort({ date: -1 });
         } else {
-            albums = await Album.find();
+            albums = await Album.find().sort({ date: -1 });
         }
 
         res.send(albums);

@@ -25,12 +25,32 @@ trackRouter.get('/', async (req, res) => {
     }
 });
 
-trackRouter.post('/', imagesUpload.single('image'),async (req, res, next) => {
+trackRouter.get('/:albumId', async (req, res) => {
     try {
+        const albumId = req.params.albumId;
+
+        const tracks = await Track.find({ album: albumId });
+
+        res.send(tracks);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: 'Internal Server Error' });
+    }
+});
+
+trackRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
+    try {
+        const existingTrack = await Track.findOne({ number: req.body.number, album: req.body.album });
+
+        if (existingTrack) {
+            return res.status(400).json({ error: 'Трек с указанным номером уже существует в этом альбоме.' });
+        }
+
         const albumData: TrackMutation = {
             name: req.body.name,
             album: req.body.album,
             duration: req.body.duration,
+            number: req.body.number
         };
 
         const track = new Track(albumData);

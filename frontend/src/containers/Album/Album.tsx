@@ -2,32 +2,35 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { useEffect } from 'react';
 import { fetchAlbum } from '../../app/albumThunk.ts';
 import { CircularProgress, Grid, Typography } from '@mui/material';
-import { selectAlbum } from '../../app/albumSlice.ts';
 import { useParams } from 'react-router-dom';
 import AlbumItem from './AlbumItem.tsx';
+import { selectArtist } from '../../app/artistSlice.ts';
+import { fetchArtistById } from '../../app/artistThunk.ts';
+import { selectAlbums } from '../../app/albumSlice.ts';
 
 const Album = () => {
   const dispatch = useAppDispatch();
-  const album = useAppSelector(selectAlbum);
+  const albums = useAppSelector(selectAlbums);
+  const artist = useAppSelector(selectArtist);
 
   const { id } = useParams();
 
   useEffect(() => {
     dispatch(fetchAlbum(id));
-  }, [dispatch]);
+    dispatch(fetchArtistById(id));
+  }, [dispatch, id]);
 
-  console.log(album);
 
   return (
     <div>
       <Grid container direction="column" spacing={2}>
         <Grid item container justifyContent="space-between" alignItems="center">
-          <Grid item sx={{width: "100%"}}>
-            <Typography sx={{margin: '0 auto', fontWeight: 'bold'}} variant="h4">Albums</Typography>
+          <Grid item sx={{width: '100%'}}>
+            <Typography sx={{fontSize: '35px'}}>{artist ? `${artist.name}'s Albums` : <CircularProgress/>}</Typography>
           </Grid>
         </Grid>
         <Grid item container spacing={2}>
-          {album ? album.map(album => (
+          {albums ? albums.map(album => (
             <AlbumItem
               name={album.name}
               image={album.image}
@@ -35,7 +38,7 @@ const Album = () => {
               key={album._id}
               id={album._id}
             />
-          )) : <CircularProgress/>}
+          )) : <h1 style={{margin: '100px auto'}}>Artist no Found</h1>}
         </Grid>
       </Grid>
     </div>
