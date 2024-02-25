@@ -1,17 +1,34 @@
-import {configureStore} from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {artistReducer} from "./artistSlice";
 import { albumReducer } from './albumSlice.ts';
 import { trackReducer } from './trackSlice.ts';
 import { usersReducer } from './usersSlice.ts';
+import {persistReducer, FLUSH, PAUSE, PERSIST, REHYDRATE, PURGE, REGISTER, persistStore} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
+const userPersistConfig = {
+  key: 'store:users',
+  storage: storage,
+  whitelist: ['user'],
+}
+
+const rootReducer = combineReducers({
+  artist: artistReducer,
+  album: albumReducer,
+  track: trackReducer,
+  users: persistReducer(userPersistConfig, usersReducer),
+})
 
 export const store = configureStore({
-  reducer: {
-    artist: artistReducer,
-    album: albumReducer,
-    track: trackReducer,
-    users: usersReducer,
-  }
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, PAUSE, PERSIST, REHYDRATE, PURGE, REGISTER]
+    }
+  })
 });
+
+export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

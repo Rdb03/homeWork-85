@@ -7,6 +7,7 @@ import NoFound from './components/NoFound/NoFound.tsx';
 import Track from './containers/Track/Track.tsx';
 import Header from './components/Header/Header.tsx';
 import Register from './features/users/Register.tsx';
+import Login from './features/users/Login.tsx';
 
 const App = () => (
     <>
@@ -20,6 +21,7 @@ const App = () => (
             <Route path="/albums/:id" element={<Album/>} />
             <Route path="/tracks/:id" element={<Track/>} />
             <Route path="/register" element={<Register/>} />
+            <Route path="/login" element={<Login/>} />
             <Route path="*" element={<NoFound/>} />
           </Routes>
         </Container>

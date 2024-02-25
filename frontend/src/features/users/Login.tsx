@@ -1,30 +1,22 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { RegisterMutation } from '../../../type';
-import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
+import { LoginMutation } from '../../../type';
+import { Alert, Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
-import { selectRegisterError } from '../../app/usersSlice.ts';
-import { register } from '../../app/usersThunk.ts';
+import { selectLoginError } from '../../app/usersSlice.ts';
+import { login } from '../../app/usersThunk.ts';
 
 const Register = () => {
   const dispatch = useAppDispatch();
-  const error = useAppSelector(selectRegisterError);
+  const error = useAppSelector(selectLoginError);
   const navigate = useNavigate();
 
-  const [state, setState] = useState<RegisterMutation>({
+  const [state, setState] = useState<LoginMutation>({
     username: '',
     password: '',
   });
-
-  const getFieldError = (fieldName: string) => {
-    try {
-      return error?.errors[fieldName].message;
-    } catch {
-      return undefined;
-    }
-  }
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
@@ -36,12 +28,9 @@ const Register = () => {
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-    try {
-      await dispatch(register(state)).unwrap();
-      navigate('/');
-    } catch (e) {
-      console.log(e);
-    }
+
+    await dispatch(login(state)).unwrap();
+    navigate('/');
   };
 
   return (
@@ -55,11 +44,16 @@ const Register = () => {
         }}
       >
         <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-          <LockOutlinedIcon/>
+          <LockOpenIcon/>
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Sign in
         </Typography>
+        {error && (
+          <Alert severity="error" sx={{mt: 3, width: '100%'}}>
+            {error.error}
+          </Alert>
+        )}
         <Box component="form" onSubmit={submitFormHandler} sx={{mt: 3}}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -68,9 +62,7 @@ const Register = () => {
                 name="username"
                 value={state.username}
                 onChange={inputChangeHandler}
-                autoComplete="new-username"
-                error={Boolean(getFieldError('username'))}
-                helperText={getFieldError('username')}
+                autoComplete="current-username"
               />
             </Grid>
             <Grid item xs={12}>
@@ -78,11 +70,9 @@ const Register = () => {
                 name="password"
                 label="Password"
                 type="password"
-                autoComplete="new-password"
+                autoComplete="current-password"
                 value={state.password}
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('password'))}
-                helperText={getFieldError('password')}
               />
             </Grid>
           </Grid>
@@ -92,12 +82,12 @@ const Register = () => {
             variant="contained"
             sx={{mt: 3, mb: 2, backgroundColor: 'black'}}
           >
-            Sign Up
+            Sign in
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link sx={{color: 'black'}} component={RouterLink} to="/register" variant="body2">
-                Already have an account? Sign in
+              <Link sx={{color: 'black'}} component={RouterLink} to="/login" variant="body2">
+                Forgot your password?
               </Link>
             </Grid>
           </Grid>

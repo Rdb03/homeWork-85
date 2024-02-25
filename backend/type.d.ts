@@ -38,3 +38,6 @@ interface UserMethods {
 
 type UserModel = Model<UserFields, {}, UserMethods>;
 
+export interface GlobalError {
+    error: string,
+}

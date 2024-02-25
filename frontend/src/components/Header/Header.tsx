@@ -1,8 +1,15 @@
 import { Grid, Typography } from '@mui/material';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+import { useAppSelector } from '../../app/hooks.ts';
+import { selectUser } from '../../app/usersSlice.ts';
+import UserMenu from './UserMenu.tsx';
+import AnonymousMenu from './AnonymousMenu.tsx';
 
 const Header = () => {
+  const user = useAppSelector(selectUser);
+
+
   return (
     <Grid sx={{
       marginBottom: '50px',
@@ -22,20 +29,11 @@ const Header = () => {
         </Typography>
         <LibraryMusicIcon sx={{fontSize: '50px', marginLeft: '15px', color: 'black'}}/>
       </Grid>
-      <Grid sx={{display: 'flex'}} item>
-        <NavLink style={{
-          marginRight: '30px',
-          textDecoration: 'none',
-          color: 'black'
-        }} to={'/register'}>
-          <Typography sx={{
-            fontWeight: 'bold',
-          }}>
-            Sign up
-          </Typography>
-        </NavLink>
-        <Typography sx={{}}>Sign in</Typography>
-      </Grid>
+      {user ? (
+        <UserMenu user={user}/>
+      ) : (
+        <AnonymousMenu/>
+      )}
     </Grid>
   );
 };

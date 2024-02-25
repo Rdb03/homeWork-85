@@ -54,3 +54,6 @@ export interface LoginMutation {
   password: string,
 }
 
+export class GlobalError {
+  error: string
+}
