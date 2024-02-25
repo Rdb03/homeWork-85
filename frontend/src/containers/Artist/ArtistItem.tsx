@@ -6,6 +6,7 @@ import { apiURL } from '../../../constants.ts';
 const ImageCardMedia = styled(CardMedia)({
     height: 0,
     paddingTop: '56.25%',
+    objectFit: 'cover',
 });
 
 interface Props {
@@ -25,11 +26,11 @@ const ArtistItem: React.FC<Props> = ({name, image, id}) => {
         <Grid
           item sm md={6} lg={4}
           component={Link} to={'/albums/' + id}
-          sx={{textDecoration: 'none'}}
+          sx={{textDecoration: 'none', margin: '20px auto'}}
         >
-            <Card sx={{height: '100%'}}>
+            <Card sx={{height: '100%', border: '1px solid grey', borderBottom: 'none'}}>
                 <CardHeader title={name}/>
-                <ImageCardMedia image={cardImage} title={name}/>
+                <ImageCardMedia sx={{borderTop: '1px solid grey'}} image={cardImage} title={name}/>
             </Card>
         </Grid>
     );
