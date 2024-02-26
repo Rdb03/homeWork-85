@@ -1,50 +1,42 @@
-import mongoose, {model, Types} from "mongoose";
+import mongoose, {model} from "mongoose";
 import User from "./User";
 import Track from "./Track";
 import {ITrackHistory} from "../type";
-
-const Schema = mongoose.Schema;
+import Artist from "./Artist";
 
 const TrackHistorySchema = new mongoose.Schema({
-    user: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        validate: {
-            validator: async (value: Types.ObjectId) => {
-                const user = await User.findById(value);
-                return Boolean(user);
-            },
-            message: 'User does not exist!',
-        }
-    },
-    trackID: {
-        type: Schema.Types.ObjectId,
-        required: true,
+    track: {
+        type: mongoose.Types.ObjectId,
         ref: 'Track',
+        required: true,
         validate: {
-            validator: async (value: Types.ObjectId) => {
-                const track = await Track.findById(value);
-                return Boolean(track);
-            },
+            validator: async (value: mongoose.Types.ObjectId) => await Track.findById(value),
             message: 'Track does not exist!',
-        }
+        },
     },
-    // artist: {
-    //     type: Schema.Types.ObjectId,
-    //     required: true,
-    //     ref: 'Artist',
-    //     validate: {
-    //         validator: async (value: Types.ObjectId) => {
-    //             const artist = await Artist.findById(value);
-    //             return Boolean(artist);
-    //         },
-    //         message: 'Artist does not exist!',
-    //     }
-    // },
-    datetime: {
-        type: Date,
-        default: () => new Date(),
-    }
+    user: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        validate: {
+            validator: async (value: mongoose.Types.ObjectId) => await User.findById(value),
+            message: 'User does not exist!',
+        },
+    },
+    trackName: String,
+    artist: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Artist',
+        required: true,
+        validate: {
+            validator: async (value: mongoose.Types.ObjectId) => await Artist.findById(value),
+            message: 'Artist does not exist!',
+        },
+    },
+    date: {
+        type: String,
+        required: true,
+    },
 });
 
 

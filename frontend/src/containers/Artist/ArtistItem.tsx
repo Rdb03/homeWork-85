@@ -2,6 +2,7 @@ import { Card, CardHeader, CardMedia, Grid, styled } from '@mui/material';
 import imageNotAvailable from '../../assets/images/image_not_available.png';
 import { Link } from 'react-router-dom';
 import { apiURL } from '../../../constants.ts';
+import React from 'react';
 
 const ImageCardMedia = styled(CardMedia)({
     height: 0,

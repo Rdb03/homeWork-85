@@ -2,44 +2,48 @@ import express from "express";
 import Album from "../models/Album";
 import {imagesUpload} from "../multer";
 import {AlbumMutation} from "../type";
+import mongoose from "mongoose";
+import auth from "../middleware/auth";
 
 
 const albumRouter = express.Router();
 
 albumRouter.get('/', async (req, res) => {
     try {
-        const artistId = req.query.artist as string;
+        const artist = req.query.artist as string;
 
-        let albums;
-
-        if (artistId) {
-            albums = await Album.find({ artist: artistId }).sort({ date: -1 });
-        } else {
-            albums = await Album.find().sort({ date: -1 });
+        if (!artist) {
+            const albums = await Album.find({ isPublished: true }).populate('artist', 'name');
+            return res.send(albums);
         }
 
-        res.send(albums);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ error: 'Internal Server Error' });
+        const albums = await Album.find({ artist: { _id: artist }, isPublished: true })
+            .sort({ date: -1 })
+            .populate('artist', 'name');
+
+        return res.send(albums);
+    } catch {
+        return res.sendStatus(500);
     }
 });
 
-albumRouter.post('/', imagesUpload.single('image'),async (req, res, next) => {
+albumRouter.post('/', auth, imagesUpload.single('image'), async (req, res, next) => {
     try {
-        const albumData: AlbumMutation = {
+        const albumData = new Album({
             name: req.body.name,
+            date: req.body.date,
             artist: req.body.artist,
-            image: req.file ? req.file.filename : null,
-            date: req.body.date
-        };
+            image: req.file ? 'images/' + req.file.filename : null,
+        });
 
-        const album = new Album(albumData);
-        await album.save();
+        await albumData.save();
 
-        res.send(album);
-    } catch (e) {
-        next(e);
+        return res.send(albumData);
+    } catch (error) {
+        if (error instanceof mongoose.Error.ValidationError) {
+            return res.status(400).send(error);
+        }
+        next(error);
     }
 });
 

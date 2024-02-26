@@ -18,6 +18,8 @@ const Track: React.FC<Props> = ({addToHistory}) => {
   const tracks = useAppSelector(selectTrack);
   const album = useAppSelector(selectAlbum);
 
+  console.log(tracks);
+
   const { id } = useParams();
 
   useEffect(() => {

@@ -20,6 +20,8 @@ const App = () => {
   const [trackHistory, setTrackHistory] = useState<ITrackHistory[]>([]);
   const user = useAppSelector(selectUser);
 
+  console.log(trackHistory);
+
   useEffect(() => {
     const storedTrackHistory = localStorage.getItem('trackHistory');
     if (storedTrackHistory) {

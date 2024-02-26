@@ -3,6 +3,8 @@ import config from "./config";
 import Artist from "./models/Artist";
 import Album from "./models/Album";
 import Track from "./models/Track";
+import crypto from "crypto";
+import User from "./models/User";
 
 const dropCollection = async (db: mongoose.Connection, collectionName: string) => {
     try {
@@ -16,11 +18,39 @@ const run = async () => {
     await mongoose.connect(config.mongoose.db);
     const db = mongoose.connection;
 
-    const collections = ['artists', 'tracks', 'albums'];
+    const collections = ['artists', 'tracks', 'albums', 'users'];
 
     for (const collectionName of collections) {
         await dropCollection(db, collectionName);
     }
+
+    await User.create(
+        {
+            username: 'user1',
+            password: '123456',
+            token: crypto.randomUUID(),
+            displayName: 'User1',
+            role: 'user',
+        }, {
+            username: 'user2',
+            password: '123456',
+            token: crypto.randomUUID(),
+            displayName: 'User2',
+            role: 'user',
+        }, {
+            username: 'admin1',
+            password: '123456',
+            token: crypto.randomUUID(),
+            displayName: 'Admin1',
+            role: 'admin',
+        }, {
+            username: 'admin2',
+            password: '123456',
+            token: crypto.randomUUID(),
+            displayName: 'Admin2',
+            role: 'admin',
+        },
+    );
 
     const macan = await Artist.create({
         name: 'MACAN',
