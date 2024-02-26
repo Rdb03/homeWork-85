@@ -7,7 +7,7 @@ import {persistReducer, FLUSH, PAUSE, PERSIST, REHYDRATE, PURGE, REGISTER, persi
 import storage from 'redux-persist/lib/storage';
 
 const userPersistConfig = {
-  key: 'store:users',
+  key: 'spotybi:users',
   storage: storage,
   whitelist: ['user'],
 }
@@ -28,7 +28,7 @@ export const store = configureStore({
   })
 });
 
-export const persistor = persistStore(store);
+export const persist = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

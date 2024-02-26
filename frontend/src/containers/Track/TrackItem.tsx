@@ -1,13 +1,16 @@
+import React from 'react';
 import { Card, Grid } from '@mui/material';
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import { ITrack } from '../../../type';
+
 
 interface Props {
-  name: string,
-  album: string,
-  duration: string,
-  number: number
+  track: ITrack;
+  onClick: (track: ITrack) => void;
 }
 
-const TrackItem: React.FC<Props> = ({name, number, duration}) => {
+const TrackItem: React.FC<Props> = ({track, onClick}) => {
+
   return (
     <div>
       <Grid
@@ -21,9 +24,16 @@ const TrackItem: React.FC<Props> = ({name, number, duration}) => {
           padding: '0 25px',
           alignItems: 'center'
         }}>
-          <p style={{fontWeight: 'bold'}}>{number}</p>
-          <p style={{fontSize: '25px'}}>{name}</p>
-          <p>{duration}</p>
+          <p style={{fontWeight: 'bold'}}>{track.number}</p>
+          <p style={{fontSize: '25px', margin: '0 auto 0 80px'}}>{track.name}</p>
+            <PlayCircleOutlineOutlinedIcon sx={{
+              marginRight: '50px',
+              cursor: 'pointer',
+              backgroundColor: 'green',
+              color: 'white',
+              borderRadius: '100px'
+            }} onClick={() => onClick(track)}/>
+          <p>{track.duration}</p>
         </Card>
       </Grid>
     </div>

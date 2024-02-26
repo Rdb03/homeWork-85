@@ -9,10 +9,8 @@ import AnonymousMenu from './AnonymousMenu.tsx';
 const Header = () => {
   const user = useAppSelector(selectUser);
 
-
   return (
     <Grid sx={{
-      marginBottom: '50px',
       borderBottom: '2px solid black',
       display: 'flex',
       justifyContent: 'space-between',
@@ -27,7 +25,7 @@ const Header = () => {
         <Typography sx={{color: 'black', fontSize: '50px'}}>
           SpotyBi
         </Typography>
-        <LibraryMusicIcon sx={{fontSize: '50px', marginLeft: '15px', color: 'black'}}/>
+        <LibraryMusicIcon sx={{fontSize: '50px', marginLeft: '15px', color: 'green'}}/>
       </Grid>
       {user ? (
         <UserMenu user={user}/>

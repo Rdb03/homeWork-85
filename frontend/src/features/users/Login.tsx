@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { LoginMutation } from '../../../type';
 import { Alert, Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectLoginError } from '../../app/usersSlice.ts';
 import { login } from '../../app/usersThunk.ts';
@@ -44,7 +44,7 @@ const Register = () => {
         }}
       >
         <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-          <LockOpenIcon/>
+          <LockOpenOutlinedIcon/>
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign in

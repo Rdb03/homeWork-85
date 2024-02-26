@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User } from '../../../type';
 import { Button, Menu, MenuItem } from '@mui/material';
+import { persist } from '../../app/store.ts';
 
 interface Props {
   user: User;
@@ -17,6 +18,15 @@ const UserMenu: React.FC<Props> = ({user}) => {
     setAnchorEl(null);
   };
 
+
+  const logout = () => {
+    localStorage.removeItem('persist:spotybi:users');
+    persist.purge().then(() => {
+      setAnchorEl(null);
+      window.location.reload();
+    });
+  }
+
   return (
     <>
      <Button color="inherit" onClick={handleClick}>
@@ -25,7 +35,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem>Profile</MenuItem>
         <MenuItem>My account</MenuItem>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem onClick={logout}>Logout</MenuItem>
         <MenuItem>TrackHistory</MenuItem>
       </Menu>
     </>

@@ -21,6 +21,10 @@ export interface ITrack {
   number: number,
 }
 
+export interface ITrackHistory {
+  trackItem: ITrack,
+}
+
 export interface RegisterMutation {
   username: string,
   password: string,

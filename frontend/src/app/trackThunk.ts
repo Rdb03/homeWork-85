@@ -14,14 +14,3 @@ export const fetchTrack = createAsyncThunk<ITrack[] | undefined, string | undefi
   }
 );
 
-export const fetchTrackByAlbumId = createAsyncThunk<ITrack[] | undefined, string | undefined>(
-  'album/fetchTrackByAlbumId',
-  async (albumId) => {
-    try {
-      const response = await axiosApi.get<ITrack[]>(`/tracks?album=${albumId}`);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-);

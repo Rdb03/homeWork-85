@@ -1,14 +1,19 @@
 import { CircularProgress, Grid, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { selectTrack } from '../../app/trackSlice.ts';
 import TrackItem from './TrackItem.tsx';
 import { fetchTrack } from '../../app/trackThunk.ts';
 import { useParams } from 'react-router-dom';
 import { fetchAlbumById } from '../../app/albumThunk.ts';
 import { selectAlbum } from '../../app/albumSlice.ts';
+import { ITrack } from '../../../type';
 
-const Track = () => {
+interface Props {
+  addToHistory: (track: ITrack) => void;
+}
+
+const Track: React.FC<Props> = ({addToHistory}) => {
   const dispatch = useAppDispatch();
   const tracks = useAppSelector(selectTrack);
   const album = useAppSelector(selectAlbum);
@@ -32,11 +37,9 @@ const Track = () => {
       <Grid item sx={{display: 'flex', flexDirection: 'column'}} container spacing={2}>
         {tracks ? tracks.map(track => (
           <TrackItem
-            name={track.name}
-            album={track.album}
-            duration={track.duration}
-            number={track.number}
             key={track._id}
+            track={track}
+            onClick={addToHistory}
           />
         )) : <CircularProgress/>}
       </Grid>

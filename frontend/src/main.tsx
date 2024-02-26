@@ -4,12 +4,12 @@ import {ThemeProvider} from "@mui/material";
 import {Provider} from "react-redux";
 import {BrowserRouter} from "react-router-dom";
 import theme from "../theme.ts";
-import { persistor, store } from './app/store.ts';
+import { persist, store } from './app/store.ts';
 import { PersistGate } from 'redux-persist/integration/react';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
-      <PersistGate persistor={persistor}>
+      <PersistGate persistor={persist}>
         <BrowserRouter>
             <ThemeProvider theme={theme}>
                 <App/>

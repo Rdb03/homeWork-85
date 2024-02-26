@@ -1,9 +1,9 @@
-import { Grid, Typography } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 const AnonymousMenu = () => {
   return (
-    <Grid sx={{display: 'flex'}} item>
+    <Grid sx={{display: 'flex', alignItems: 'center'}} item>
       <NavLink style={{
         marginRight: '30px',
         textDecoration: 'none',
@@ -20,11 +20,12 @@ const AnonymousMenu = () => {
         textDecoration: 'none',
         color: 'black'
       }} to={'/login'}>
-        <Typography sx={{
-          fontWeight: 'bold',
-        }}>
+        <Button sx={{
+          borderRadius: '20px',
+          fontWeight: 'bold'
+        }} variant="contained" color="success">
           Sign in
-        </Typography>
+        </Button>
       </NavLink>
     </Grid>
   );
