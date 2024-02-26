@@ -29,6 +29,18 @@ const TrackHistorySchema = new mongoose.Schema({
             message: 'Track does not exist!',
         }
     },
+    // artist: {
+    //     type: Schema.Types.ObjectId,
+    //     required: true,
+    //     ref: 'Artist',
+    //     validate: {
+    //         validator: async (value: Types.ObjectId) => {
+    //             const artist = await Artist.findById(value);
+    //             return Boolean(artist);
+    //         },
+    //         message: 'Artist does not exist!',
+    //     }
+    // },
     datetime: {
         type: Date,
         default: () => new Date(),

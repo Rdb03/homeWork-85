@@ -1,4 +1,4 @@
-import './App.css'
+import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Artist from './containers/Artist/Artist.tsx';
@@ -9,7 +9,7 @@ import Header from './components/Header/Header.tsx';
 import Register from './features/users/Register.tsx';
 import Login from './features/users/Login.tsx';
 import TrackHistory from './components/TrackHistory/TrackHistory.tsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ITrack, ITrackHistory } from '../type';
 import { useAppDispatch, useAppSelector } from './app/hooks.ts';
 import { trackHistoryThunk } from './app/trackHistoryThunk.ts';
@@ -20,8 +20,16 @@ const App = () => {
   const [trackHistory, setTrackHistory] = useState<ITrackHistory[]>([]);
   const user = useAppSelector(selectUser);
 
-  console.log(trackHistory);
-  console.log(user?.token);
+  useEffect(() => {
+    const storedTrackHistory = localStorage.getItem('trackHistory');
+    if (storedTrackHistory) {
+      setTrackHistory(JSON.parse(storedTrackHistory));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('trackHistory', JSON.stringify(trackHistory));
+  }, [trackHistory]);
 
 
   const addTrackToHistory = async (trackItem: ITrack) => {
@@ -34,7 +42,11 @@ const App = () => {
           await dispatch(trackHistoryThunk([token, trackID]));
 
           setTrackHistory((prevState) => {
-            return [{ trackItem }, ...prevState];
+            const newTrackHistoryItem: ITrackHistory = {
+              trackItem,
+            };
+
+            return [newTrackHistoryItem, ...prevState];
           });
         } catch (error) {
           console.error('Error dispatching trackHistoryThunk:', error);

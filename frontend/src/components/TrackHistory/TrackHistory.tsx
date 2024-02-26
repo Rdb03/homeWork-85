@@ -8,8 +8,6 @@ interface Props {
 
 const TrackHistory: React.FC<Props> = ({ tracks }) => {
 
-  console.log(tracks);
-
   return (
     <Grid sx={{ borderRight: '1px solid black', width: '20%' }}>
       <Typography sx={{ fontSize: '40px', marginTop: '50px', alignSelf: 'center' }}>Track history</Typography>
@@ -21,7 +19,6 @@ const TrackHistory: React.FC<Props> = ({ tracks }) => {
           margin: '20px',
           borderRadius: '7px'
         }} item key={index}>
-          <Typography></Typography>
           <Typography>{track.trackItem.name}</Typography>
         </Grid>
       ))}

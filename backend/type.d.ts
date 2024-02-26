@@ -1,4 +1,4 @@
-import {Model, Types} from "mongoose";
+import {Model} from "mongoose";
 
 export interface ArtistMutation {
     name: string,
@@ -38,6 +38,3 @@ interface UserMethods {
 
 type UserModel = Model<UserFields, {}, UserMethods>;
 
-export interface GlobalError {
-    error: string,
-}

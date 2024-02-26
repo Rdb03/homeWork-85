@@ -19,6 +19,7 @@ export interface ITrack {
   album: string,
   duration: string,
   number: number,
+  artist: string
 }
 
 export interface ITrackHistory {

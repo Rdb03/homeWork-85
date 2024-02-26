@@ -36,7 +36,6 @@ const UserMenu: React.FC<Props> = ({user}) => {
         <MenuItem>Profile</MenuItem>
         <MenuItem>My account</MenuItem>
         <MenuItem onClick={logout}>Logout</MenuItem>
-        <MenuItem>TrackHistory</MenuItem>
       </Menu>
     </>
   );
