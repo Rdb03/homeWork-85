@@ -1,47 +1,47 @@
 import { CircularProgress, Grid, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
-import React, { useEffect } from 'react';
-import { selectTrack } from '../../app/trackSlice.ts';
+import { selectTrack, selectTrackLoading } from '../../app/trackSlice.ts';
 import TrackItem from './TrackItem.tsx';
-import { fetchTrack } from '../../app/trackThunk.ts';
 import { useParams } from 'react-router-dom';
 import { fetchAlbumById } from '../../app/albumThunk.ts';
-import { selectAlbum } from '../../app/albumSlice.ts';
-import { ITrack } from '../../../type';
+import { selectAlbums } from '../../app/albumSlice.ts';
+import { fetchTracks } from '../../app/trackThunk.ts';
+import { useEffect } from 'react';
 
-interface Props {
-  addToHistory: (track: ITrack) => void;
-}
-
-const Track: React.FC<Props> = ({addToHistory}) => {
+const Track = () => {
   const dispatch = useAppDispatch();
   const tracks = useAppSelector(selectTrack);
-  const album = useAppSelector(selectAlbum);
-
-  console.log(tracks);
+  const loading = useAppSelector(selectTrackLoading);
+  const album = useAppSelector(selectAlbums);
 
   const { id } = useParams();
 
+  console.log(tracks);
+
   useEffect(() => {
-    dispatch(fetchTrack(id));
+    if (id != null) {
+      dispatch(fetchTracks(id));
+    }
     dispatch(fetchAlbumById(id));
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item container justifyContent="space-between" alignItems="center">
         <Grid item sx={{width: "100%"}}>
-          <Typography sx={{margin: '0 auto', fontWeight: 'bold', fontSize: '50px'}} variant="h4">{album ? album.artist.name : ''}</Typography>
-          <Typography sx={{margin: '0 auto 50px', fontWeight: 'bold', fontSize: '50px'}} variant="h4">{album ? album.name : 'Not found'}</Typography>
+          <Typography sx={{margin: '0 auto', fontWeight: 'bold', fontSize: '50px'}} variant="h4">{album.length ? album[0].artist.name : ''}</Typography>
+          <Typography sx={{margin: '0 auto 50px', fontWeight: 'bold', fontSize: '50px'}} variant="h4">{album.length ? album[0].name : 'Not found'}</Typography>
           <Typography sx={{margin: '0 auto', fontWeight: 'bold'}} variant="h4">Tracks</Typography>
         </Grid>
       </Grid>
       <Grid item sx={{display: 'flex', flexDirection: 'column'}} container spacing={2}>
-        {tracks ? tracks.map(track => (
+        {tracks && !loading ? tracks.map((track ) => (
           <TrackItem
             key={track._id}
-            track={track}
-            onClick={addToHistory}
+            name={track.name}
+            duration={track.duration}
+            number={track.number}
+            id={track._id}
           />
         )) : <CircularProgress/>}
       </Grid>

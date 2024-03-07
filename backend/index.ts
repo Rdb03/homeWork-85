@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from 'cors';
-
 import config from "./config";
 import artistRouter from "./routers/artist";
 import albumRouter from "./routers/album";

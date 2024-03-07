@@ -1,18 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { IAlbum } from '../../type';
-import { fetchAlbum, fetchAlbumById } from './albumThunk.ts';
+import { fetchAlbums, fetchAllAlbums } from './albumThunk.ts';
 
 interface AlbumState {
-  items: IAlbum[] | undefined;
-  album: IAlbum | undefined;
-  fetchLoading: boolean;
+  items: IAlbum[];
+  fetchLoadingAlbums: boolean;
 }
 
 const initialState: AlbumState = {
   items: [],
-  album: undefined,
-  fetchLoading: false,
+  fetchLoadingAlbums: false,
 };
 
 export const albumSlice = createSlice({
@@ -20,25 +18,33 @@ export const albumSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchAlbum.pending, (state) => {
-      state.fetchLoading = true;
+
+    builder.addCase(fetchAlbums.pending, (state) => {
+      state.fetchLoadingAlbums = true;
     });
-    builder.addCase(fetchAlbum.fulfilled, (state, {payload: albums}) => {
-      state.fetchLoading = false;
+    builder.addCase(fetchAlbums.fulfilled, (state, { payload: albums }) => {
+      state.fetchLoadingAlbums = false;
       state.items = albums;
     });
-    builder.addCase(fetchAlbumById.pending, (state) => {
-      state.fetchLoading = true;
+    builder.addCase(fetchAlbums.rejected, (state) => {
+      state.fetchLoadingAlbums = false;
     });
-    builder.addCase(fetchAlbumById.fulfilled, (state, { payload: album }) => {
-      state.fetchLoading = false;
-      state.album = album;
+
+    builder.addCase(fetchAllAlbums.pending, (state) => {
+      state.fetchLoadingAlbums = true;
+    });
+    builder.addCase(fetchAllAlbums.fulfilled, (state, { payload: albums }) => {
+      state.fetchLoadingAlbums = false;
+      state.items = albums;
+    });
+    builder.addCase(fetchAllAlbums.rejected, (state) => {
+      state.fetchLoadingAlbums = false;
     });
   },
 });
 
 export const albumReducer = albumSlice.reducer;
 export const selectAlbums = (state: RootState) => state.album.items;
-export const selectAlbum = (state: RootState) => state.album.album;
+export const selectAlbumsLoading = (state: RootState) => state.album.fetchLoadingAlbums;
 
 

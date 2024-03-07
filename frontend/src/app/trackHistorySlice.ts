@@ -1,6 +1,6 @@
 import { ITrackHistory } from '../../type';
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchHistory } from './trackHistoryThunk';
+import { fetchHistory } from './trackHistoryThunk.ts';
 import { RootState } from './store.ts';
 
 interface TrackHistoryState {

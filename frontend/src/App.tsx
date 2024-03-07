@@ -8,67 +8,9 @@ import Track from './containers/Track/Track.tsx';
 import Header from './components/Header/Header.tsx';
 import Register from './features/users/Register.tsx';
 import Login from './features/users/Login.tsx';
-import TrackHistory from './components/TrackHistory/TrackHistory.tsx';
-import { useEffect, useState } from 'react';
-import { ITrack, ITrackHistory } from '../type';
-import { useAppDispatch, useAppSelector } from './app/hooks.ts';
-import { trackHistoryThunk } from './app/trackHistoryThunk.ts';
-import { selectUser } from './app/usersSlice.ts';
+import TrackHistory from './containers/trackHistory/TrackHistory.tsx';
 
 const App = () => {
-  const dispatch = useAppDispatch();
-  const [trackHistory, setTrackHistory] = useState<ITrackHistory[]>([]);
-  const user = useAppSelector(selectUser);
-
-  console.log(trackHistory);
-
-  useEffect(() => {
-    const storedTrackHistory = localStorage.getItem('trackHistory');
-    if (storedTrackHistory) {
-      setTrackHistory(JSON.parse(storedTrackHistory));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('trackHistory', JSON.stringify(trackHistory));
-  }, [trackHistory]);
-
-
-  const addTrackToHistory = async (trackItem: ITrack) => {
-    if (user) {
-      const token = user.token;
-      const trackID = trackItem._id;
-
-      if (token) {
-        try {
-          await dispatch(trackHistoryThunk([token, trackID]));
-
-          setTrackHistory((prevState) => {
-            const newTrackHistoryItem: ITrackHistory = {
-              trackItem,
-            };
-
-            return [newTrackHistoryItem, ...prevState];
-          });
-        } catch (error) {
-          console.error('Error dispatching trackHistoryThunk:', error);
-        }
-      } else {
-        console.error('Token is undefined');
-      }
-    } else {
-      alert('You are not logged in!');
-    }
-  };
-
-
-  const trackHistoryItem = () => {
-    if(user) {
-      return <TrackHistory tracks={trackHistory}/>
-    } else {
-      return null
-    }
-  }
 
   return (
     <>
@@ -76,13 +18,13 @@ const App = () => {
         <Header/>
       </header>
       <main className="app-main">
-        {trackHistoryItem()}
         <Container maxWidth="xl" sx={{marginTop: '50px'}}>
           <Routes>
             <Route path="/" element={<Artist/>}/>
             <Route path="/albums/:id" element={<Album/>}/>
-            <Route path="/tracks/:id" element={<Track addToHistory={addTrackToHistory}/>}/>
+            <Route path="/tracks/:id" element={<Track/>}/>
             <Route path="/register" element={<Register/>}/>
+            <Route path="/track_history" element={<TrackHistory />} />
             <Route path="/login" element={<Login/>}/>
             <Route path="*" element={<NoFound/>}/>
           </Routes>

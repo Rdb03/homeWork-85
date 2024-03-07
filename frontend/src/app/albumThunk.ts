@@ -2,18 +2,12 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { IAlbum } from '../../type';
 import axiosApi from '../../axiosApi.ts';
 
-export const fetchAlbum = createAsyncThunk<IAlbum[] | undefined, string | undefined>(
-  'album/fetchAll',
-  async (artistId) => {
-    try {
-      const response = await axiosApi.get<IAlbum[]>('/albums', {
-        params: { artist: artistId },
-      });
-      return response.data;
-    } catch (error) {
-      console.error(error);
-    }
-  }
+export const fetchAlbums = createAsyncThunk<IAlbum[], string>(
+  'albums/fetchAlbums',
+  async (id: string) => {
+    const response = await axiosApi.get<IAlbum[]>(`/albums?artist=${id}`);
+    return response.data;
+  },
 );
 
 export const fetchAlbumById = createAsyncThunk<IAlbum, string | undefined>(
@@ -23,3 +17,8 @@ export const fetchAlbumById = createAsyncThunk<IAlbum, string | undefined>(
     return response.data;
   }
 );
+
+export const fetchAllAlbums = createAsyncThunk<IAlbum[]>('albums/fetchAllAlbums', async () => {
+  const response = await axiosApi.get<IAlbum[]>('albums');
+  return response.data;
+});

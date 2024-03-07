@@ -2,15 +2,11 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ITrack } from '../../type';
 import axiosApi from '../../axiosApi.ts';
 
-export const fetchTrack = createAsyncThunk<ITrack[] | undefined, string | undefined>(
-  'album/fetchAll',
-  async (albumId) => {
-    try {
-      const response = await axiosApi.get<ITrack[]>(`/tracks/${albumId}`);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-    }
-  }
+export const fetchTracks = createAsyncThunk<ITrack[], string>(
+  'tracks/fetchTracks',
+  async (id: string) => {
+    const response = await axiosApi.get<ITrack[]>(`/tracks?album=${id}`);
+    return response.data;
+  },
 );
 

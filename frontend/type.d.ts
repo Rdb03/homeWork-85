@@ -19,11 +19,22 @@ export interface ITrack {
   album: string,
   duration: string,
   number: number,
-  artist: string
+  artist: string,
+  date: string,
+}
+
+export interface TrackHistoryMutation {
+  track: string;
 }
 
 export interface ITrackHistory {
-  trackItem: ITrack,
+  _id: string;
+  trackName: string;
+  artist: {
+    name: string;
+    _id: string;
+  };
+  date: string;
 }
 
 export interface RegisterMutation {

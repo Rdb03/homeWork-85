@@ -1,15 +1,28 @@
 import React from 'react';
 import { Card, Grid } from '@mui/material';
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import { ITrack } from '../../../type';
-
+import { postTrack } from '../../app/trackHistoryThunk.ts';
+import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
+import { selectUser } from '../../app/usersSlice.ts';
 
 interface Props {
-  track: ITrack;
-  onClick: (track: ITrack) => void;
+  name: string;
+  number: number;
+  duration: string;
+  id: string;
 }
 
-const TrackItem: React.FC<Props> = ({track, onClick}) => {
+const TrackItem: React.FC<Props> = (props) => {
+  const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
+
+  const goPostTrack = () => {
+    const track = {
+      track: props.id,
+    };
+
+    dispatch(postTrack(track));
+  };
 
   return (
     <div>
@@ -24,16 +37,17 @@ const TrackItem: React.FC<Props> = ({track, onClick}) => {
           padding: '0 25px',
           alignItems: 'center'
         }}>
-          <p style={{fontWeight: 'bold'}}>{track.number}</p>
-          <p style={{fontSize: '25px', margin: '0 auto 0 80px'}}>{track.name}</p>
+          <p style={{fontWeight: 'bold'}}>{props.number}</p>
+          <p style={{fontSize: '25px', margin: '0 auto 0 80px'}}>{props.name}</p>
+          {user ?
             <PlayCircleOutlineOutlinedIcon sx={{
-              marginRight: '50px',
-              cursor: 'pointer',
-              backgroundColor: 'green',
-              color: 'white',
-              borderRadius: '100px'
-            }} onClick={() => onClick(track)}/>
-          <p>{track.duration}</p>
+            marginRight: '50px',
+            cursor: 'pointer',
+            backgroundColor: 'green',
+            color: 'white',
+            borderRadius: '100px'
+          }} onClick={goPostTrack}/> : ''}
+          <p>{props.duration}</p>
         </Card>
       </Grid>
     </div>

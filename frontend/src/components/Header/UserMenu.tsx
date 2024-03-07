@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { User } from '../../../type';
+import { Link } from 'react-router-dom';
 import { Button, Menu, MenuItem } from '@mui/material';
 import { persist } from '../../app/store.ts';
 
@@ -33,8 +34,9 @@ const UserMenu: React.FC<Props> = ({user}) => {
        Hello, {user.username}!
      </Button>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>My account</MenuItem>
+        <MenuItem>
+          <Link to={'/track_history'} style={{color: 'black', textDecoration: 'none'}}>Track History</Link>
+        </MenuItem>
         <MenuItem onClick={logout}>Logout</MenuItem>
       </Menu>
     </>
