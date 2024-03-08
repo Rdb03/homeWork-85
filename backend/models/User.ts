@@ -39,8 +39,8 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
     role: {
         type: String,
         required: true,
-        default: 'user',
-        enum: ['user', 'admin']
+        enum: ['user', 'admin'],
+        default: 'user'
     }
 });
 

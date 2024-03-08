@@ -1,9 +1,9 @@
 import express from "express";
 import Album from "../models/Album";
 import {imagesUpload} from "../multer";
-import {AlbumMutation} from "../type";
 import mongoose from "mongoose";
 import auth from "../middleware/auth";
+import permit from "../middleware/permit";
 
 
 const albumRouter = express.Router();
@@ -58,6 +58,23 @@ albumRouter.get('/:id', async (req, res) => {
         res.send(album);
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+albumRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const album = await Album.findById(id);
+
+        if (!album) {
+            return res.status(404).send('Not found!');
+        }
+
+        await Album.findByIdAndDelete(id);
+        return res.send('Deleted');
+    } catch (e) {
+        return res.status(500).send('error');
     }
 });
 

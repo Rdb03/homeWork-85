@@ -1,7 +1,9 @@
 import express from 'express';
 import Artist from "../models/Artist";
 import {imagesUpload} from "../multer";
-import {ArtistMutation} from "../type";
+import mongoose from "mongoose";
+import auth from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const artistRouter = express.Router();
 
@@ -28,21 +30,40 @@ artistRouter.get('/:id', async (req, res, next) => {
     }
 });
 
-artistRouter.post('/', imagesUpload.single('image'),async (req, res, next) => {
-   try {
-       const artistData: ArtistMutation = {
-         name: req.body.name,
-           image: req.file ? req.file.filename : null,
-         info: req.body.info,
-       };
+artistRouter.post('/', auth, imagesUpload.single('image'), async (req, res, next) => {
+    try {
+        const artistData = new Artist({
+            name: req.body.name,
+            info: req.body.info,
+            image: req.file ? 'images/' + req.file.filename : null,
+        });
 
-       const artist = new Artist(artistData);
-       await artist.save();
+        await artistData.save();
 
-       res.send(artist);
-   } catch (e) {
-       next(e);
-   }
+        return res.send(artistData);
+    } catch (e) {
+        if (e instanceof mongoose.Error.ValidationError) {
+            return res.status(400).send(e);
+        }
+        next(e);
+    }
+});
+
+artistRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const artist = await Artist.findById(id);
+
+        if (!artist) {
+            return res.status(404).send('Not found!');
+        }
+
+        await Artist.findByIdAndDelete(id);
+        return res.send('Deleted');
+    } catch (e) {
+        return res.status(500).send('error');
+    }
 });
 
 export default artistRouter;
