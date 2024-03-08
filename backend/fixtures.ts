@@ -56,7 +56,7 @@ const run = async () => {
         },
     );
 
-    const [macan, xxxtentacion] = await Artist.create(
+    const [macan, xxxtentacion, basta] = await Artist.create(
         {
             name: 'Macan',
             info: 'хип-хоп',
@@ -67,10 +67,15 @@ const run = async () => {
             info: 'хип-хоп/рэп',
             image: 'images/62877.jpg',
             isPublished: true,
+        },  {
+            name: 'Баста',
+            info: 'хип-хоп/рэп',
+            image: 'fixtures/basta.jpg',
+            isPublished: false,
         },
     );
 
-    const [album1000, album12, revenge, skins] = await Album.create(
+    const [album1000, album12, revenge, skins, basta3] = await Album.create(
         {
             name: '1000 киллометров до мечты',
             artist: macan._id,
@@ -95,6 +100,12 @@ const run = async () => {
             date: 2018,
             image:'images/42314132skins.png',
             isPublished: true,
+        }, {
+            artist: basta._id,
+            name: 'Баста 3',
+            date: 2016,
+            image: 'fixtures/basta3.jpg',
+            isPublished: false,
         },
     );
 
@@ -196,7 +207,25 @@ const run = async () => {
             duration: '2:44',
             number: 4,
             isPublished: true,
-        }
+        },{
+            album: basta3._id,
+            name: 'Урбан',
+            duration: '4:12',
+            number: 1,
+            isPublished: false,
+        }, {
+            album: basta3._id,
+            name: 'Деньги',
+            duration: '3:19',
+            number: 2,
+            isPublished: false,
+        }, {
+            album: basta3._id,
+            name: 'Олимпиада 80',
+            duration: '5:09',
+            number: 3,
+            isPublished: false,
+        },
     );
 
     await db.close();
