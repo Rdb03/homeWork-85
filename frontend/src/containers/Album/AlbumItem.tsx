@@ -1,7 +1,10 @@
-import { Card, CardHeader, CardMedia, Grid, styled } from '@mui/material';
+import { Button, Card, CardHeader, CardMedia, Grid, styled, Typography } from '@mui/material';
 import imageNotAvailable from '../../assets/images/image_not_available.png';
 import { apiURL } from '../../../constants.ts';
 import { Link } from 'react-router-dom';
+import React from 'react';
+import { useAppSelector } from '../../app/hooks.ts';
+import { selectUser } from '../../app/usersSlice.ts';
 
 const ImageCardMedia = styled(CardMedia)({
   height: 0,
@@ -13,11 +16,12 @@ interface Props {
   date: number,
   image: string | null,
   id: string,
+  isPublished: boolean,
 }
 
 
-const AlbumItem: React.FC<Props> = ({id, image, name, date}) => {
-
+const AlbumItem: React.FC<Props> = ({id, image, name, date, isPublished}) => {
+  const user = useAppSelector(selectUser);
   let cardImage = imageNotAvailable;
 
   if (image) {
@@ -30,8 +34,21 @@ const AlbumItem: React.FC<Props> = ({id, image, name, date}) => {
       component={Link} to={'/tracks/' + id}
       sx={{textDecoration: 'none', margin: '20px auto'}}
     >
+      {user?.role === 'admin' ?
+        <Grid>
+          <Button variant="outlined" color="error">Delete</Button>
+        </Grid>
+        : null
+      }
+      {user?.role === 'admin' && !isPublished ?
+        <Grid>
+          <Button variant="contained" color="success">Publish</Button>
+        </Grid>
+        : null
+      }
       <Card sx={{height: '100%'}}>
-        <CardHeader title={name}/>
+        <CardHeader sx={{marginLeft: 'auto'}} title={name}/>
+        <Typography sx={{marginLeft: 'auto', color: 'red'}}>{!isPublished ? 'unpublished' : null}</Typography>
         <p>{date} г.</p>
         <ImageCardMedia image={cardImage} title={name}/>
       </Card>

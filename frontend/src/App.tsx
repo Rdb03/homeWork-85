@@ -9,9 +9,11 @@ import Header from './components/Header/Header.tsx';
 import Register from './features/users/Register.tsx';
 import Login from './features/users/Login.tsx';
 import TrackHistory from './containers/trackHistory/TrackHistory.tsx';
+import TrackForm from './containers/Track/components/TrackForm.tsx';
+import ArtistForm from './containers/Artist/components/ArtistForm.tsx';
+import AlbumForm from './containers/Album/components/AlbumForm.tsx';
 
 const App = () => {
-
   return (
     <>
       <header>
@@ -27,6 +29,9 @@ const App = () => {
             <Route path="/track_history" element={<TrackHistory />} />
             <Route path="/login" element={<Login/>}/>
             <Route path="*" element={<NoFound/>}/>
+            <Route path="/newArtist" element={<ArtistForm />} />
+            <Route path="/newAlbum" element={<AlbumForm />} />
+            <Route path="/newTrack" element={<TrackForm />} />
           </Routes>
         </Container>
       </main>

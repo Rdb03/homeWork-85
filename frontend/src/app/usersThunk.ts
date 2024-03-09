@@ -21,6 +21,10 @@ export const register = createAsyncThunk<RegisterResponse, RegisterMutation, { r
   }
 );
 
+export const logout = createAsyncThunk('users/logout', async () => {
+  await axiosApi.delete('/users/sessions');
+});
+
 export const login = createAsyncThunk<RegisterResponse, LoginMutation, {rejectValue: GlobalError}>(
   'users/login',
   async (loginMutation, {rejectWithValue}) => {

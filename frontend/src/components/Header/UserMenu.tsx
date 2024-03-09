@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { User } from '../../../type';
 import { Link } from 'react-router-dom';
 import { Button, Menu, MenuItem } from '@mui/material';
-import { persist } from '../../app/store.ts';
+import { logout } from '../../app/usersThunk.ts';
+import { useAppDispatch } from '../../app/hooks.ts';
+import { unsetUser } from '../../app/usersSlice.ts';
 
 interface Props {
   user: User;
 }
 
 const UserMenu: React.FC<Props> = ({user}) => {
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -19,14 +22,10 @@ const UserMenu: React.FC<Props> = ({user}) => {
     setAnchorEl(null);
   };
 
-
-  const logout = () => {
-    localStorage.removeItem('persist:spotybi:users');
-    persist.purge().then(() => {
-      setAnchorEl(null);
-      window.location.reload();
-    });
-  }
+  const handleLogout = async () => {
+    dispatch(logout());
+    dispatch(unsetUser());
+  };
 
   return (
     <>
@@ -37,7 +36,16 @@ const UserMenu: React.FC<Props> = ({user}) => {
         <MenuItem>
           <Link to={'/track_history'} style={{color: 'black', textDecoration: 'none'}}>Track History</Link>
         </MenuItem>
-        <MenuItem onClick={logout}>Logout</MenuItem>
+        <MenuItem>
+          <Link to={'/newArtist'} style={{color: 'black', textDecoration: 'none'}}>Add artist</Link>
+        </MenuItem>
+        <MenuItem>
+          <Link to={'/newAlbum'} style={{color: 'black', textDecoration: 'none'}}>Add album</Link>
+        </MenuItem>
+        <MenuItem>
+          <Link to={'/newTrack'} style={{color: 'black', textDecoration: 'none'}}>Add track</Link>
+        </MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </>
   );

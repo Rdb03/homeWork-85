@@ -8,13 +8,13 @@ import { persist, store } from './app/store.ts';
 import { PersistGate } from 'redux-persist/integration/react';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
+  <PersistGate persistor={persist}>
     <Provider store={store}>
-      <PersistGate persistor={persist}>
         <BrowserRouter>
             <ThemeProvider theme={theme}>
                 <App/>
             </ThemeProvider>
         </BrowserRouter>
-      </PersistGate>
     </Provider>
+  </PersistGate>
 )

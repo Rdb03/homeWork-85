@@ -70,7 +70,7 @@ const run = async () => {
         },  {
             name: 'Баста',
             info: 'хип-хоп/рэп',
-            image: 'fixtures/basta.jpg',
+            image: 'images/basta.jpg',
             isPublished: false,
         },
     );
@@ -101,10 +101,10 @@ const run = async () => {
             image:'images/42314132skins.png',
             isPublished: true,
         }, {
-            artist: basta._id,
             name: 'Баста 3',
+            artist: basta._id,
             date: 2016,
-            image: 'fixtures/basta3.jpg',
+            image: 'images/basta3.jpg',
             isPublished: false,
         },
     );

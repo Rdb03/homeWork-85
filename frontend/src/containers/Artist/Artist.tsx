@@ -4,10 +4,14 @@ import { fetchArtist } from '../../app/artistThunk';
 import { Grid, Typography } from '@mui/material';
 import ArtistItem from './ArtistItem';
 import { selectArtists } from '../../app/artistSlice.ts';
+import { selectUser } from '../../app/usersSlice.ts';
 
 const Artist = () => {
     const dispatch = useAppDispatch();
+    const user = useAppSelector(selectUser);
     const artists = useAppSelector(selectArtists);
+
+    console.log(artists);
 
     useEffect(() => {
         dispatch(fetchArtist());
@@ -22,11 +26,12 @@ const Artist = () => {
             </Grid>
             <Grid item container spacing={2}>
                 {artists.map(artist => (
-                    <ArtistItem
+                  (user?.role !== 'admin' ? artist.isPublished : artist)  && <ArtistItem
                       key={artist._id}
                       id={artist._id}
                       name={artist.name}
                       image={artist.image}
+                      isPublished={artist.isPublished}
                     />
                 ))}
             </Grid>

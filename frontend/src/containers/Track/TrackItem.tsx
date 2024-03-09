@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Grid } from '@mui/material';
+import { Button, Card, Grid, Typography } from '@mui/material';
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import { postTrack } from '../../app/trackHistoryThunk.ts';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
@@ -10,6 +10,7 @@ interface Props {
   number: number;
   duration: string;
   id: string;
+  isPublished: boolean
 }
 
 const TrackItem: React.FC<Props> = (props) => {
@@ -17,6 +18,11 @@ const TrackItem: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch();
 
   const goPostTrack = () => {
+
+    if(!user) {
+      alert('Go Login!')
+    }
+
     const track = {
       track: props.id,
     };
@@ -39,15 +45,27 @@ const TrackItem: React.FC<Props> = (props) => {
         }}>
           <p style={{fontWeight: 'bold'}}>{props.number}</p>
           <p style={{fontSize: '25px', margin: '0 auto 0 80px'}}>{props.name}</p>
-          {user ?
             <PlayCircleOutlineOutlinedIcon sx={{
             marginRight: '50px',
             cursor: 'pointer',
             backgroundColor: 'green',
             color: 'white',
             borderRadius: '100px'
-          }} onClick={goPostTrack}/> : ''}
+          }} onClick={goPostTrack}/>
           <p>{props.duration}</p>
+          {user?.role === 'admin' ?
+            <Grid>
+              <Button variant="outlined" color="error">Delete</Button>
+            </Grid>
+            : null
+          }
+          {user?.role === 'admin' && !props.isPublished ?
+            <Grid>
+              <Button variant="contained" color="success">Publish</Button>
+            </Grid>
+            : null
+          }
+          <Typography sx={{marginLeft: 'auto', color: 'red'}}>{!props.isPublished ? 'unpublished' : null}</Typography>
         </Card>
       </Grid>
     </div>

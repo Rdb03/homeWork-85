@@ -3,6 +3,7 @@ export interface IArtist {
     name: string,
     image: string | null,
     info: string,
+    isPublished: boolean
 }
 
 export interface IAlbum {
@@ -11,16 +12,18 @@ export interface IAlbum {
   artist: IArtist,
   date: number,
   image: string | null,
+  isPublished: boolean
 }
 
 export interface ITrack {
   _id: string,
   name: string,
-  album: string,
+  album: IAlbum,
   duration: string,
   number: number,
   artist: string,
   date: string,
+  isPublished: boolean
 }
 
 export interface TrackHistoryMutation {
@@ -46,6 +49,7 @@ export interface User {
   _id: string,
   username: string,
   token: string,
+  role: string,
 }
 
 export interface ValidationError {
@@ -72,4 +76,23 @@ export interface LoginMutation {
 
 export class GlobalError {
   error: string
+}
+export interface AlbumMutation {
+  name: string;
+  date: string;
+  artist: string;
+  image: File | null;
+}
+
+export interface ArtistMutation {
+  name: string;
+  info: string;
+  image: File | null;
+}
+
+export interface TrackMutation {
+  name: string;
+  duration: string;
+  album: string;
+  number: number;
 }

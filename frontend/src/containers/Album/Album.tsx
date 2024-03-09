@@ -5,10 +5,12 @@ import { useParams } from 'react-router-dom';
 import AlbumItem from './AlbumItem.tsx';
 import { selectAlbums } from '../../app/albumSlice.ts';
 import { fetchAlbums } from '../../app/albumThunk.ts';
+import { selectUser } from '../../app/usersSlice.ts';
 
 const Album = () => {
   const dispatch = useAppDispatch();
   const albums = useAppSelector(selectAlbums);
+  const user = useAppSelector(selectUser);
   const { id } = useParams();
 
   useEffect(() => {
@@ -16,6 +18,8 @@ const Album = () => {
       dispatch(fetchAlbums(id));
     }
   }, [dispatch, id]);
+
+  console.log(albums);
 
   return (
     <div>
@@ -27,12 +31,13 @@ const Album = () => {
         </Grid>
         <Grid item container spacing={2}>
           {albums ? albums.map(album => (
-            <AlbumItem
+            (user?.role !== 'admin' ? album.isPublished : album)  && <AlbumItem
               name={album.name}
               image={album.image}
               date={album.date}
               key={album._id}
               id={album._id}
+              isPublished={album.isPublished}
             />
           )) : <h1 style={{margin: '100px auto'}}>Artist no Found</h1>}
         </Grid>

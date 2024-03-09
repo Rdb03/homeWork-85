@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ITrack } from '../../type';
+import { ITrack, TrackMutation } from '../../type';
 import axiosApi from '../../axiosApi.ts';
+import { RootState } from './store.ts';
 
 export const fetchTracks = createAsyncThunk<ITrack[], string>(
   'tracks/fetchTracks',
@@ -10,3 +11,20 @@ export const fetchTracks = createAsyncThunk<ITrack[], string>(
   },
 );
 
+export const createTrack = createAsyncThunk<void, { trackMutation: TrackMutation, token: string }, { state: RootState }>(
+  'tracks/createTrack',
+  async ({ trackMutation, token }, _thunkAPI) => {
+    try {
+      const response = await axiosApi.post('/tracks', trackMutation, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Error creating track:', error);
+      throw error;
+    }
+  },
+);

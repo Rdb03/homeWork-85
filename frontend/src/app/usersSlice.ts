@@ -23,29 +23,34 @@ const initialState: UserState = {
 export const usersSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {},
+  reducers: {
+    unsetUser: (state) => {
+      state.user = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(register.pending, (state) => {
       state.registerLoading = true;
       state.registerError = null;
     });
-    builder.addCase(register.fulfilled, (state, {payload: data}) => {
+    builder.addCase(register.fulfilled, (state, { payload: userResponse }) => {
       state.registerLoading = false;
-      state.user = data.user;
+      state.user = userResponse.user;
     });
-    builder.addCase(register.rejected, (state, {payload: error}) => {
+    builder.addCase(register.rejected, (state, { payload: error }) => {
       state.registerLoading = false;
-      state.registerError = error|| null;
+      state.registerError = error || null;
     });
+
     builder.addCase(login.pending, (state) => {
-      state.loginLoading = false;
-      state.registerError = null;
-    });
-    builder.addCase(login.fulfilled, (state, {payload: data}) => {
       state.loginLoading = true;
-      state.user = data.user;
+      state.loginError = null;
     });
-    builder.addCase(login.rejected, (state, {payload: error}) => {
+    builder.addCase(login.fulfilled, (state, { payload: userResponse }) => {
+      state.loginLoading = false;
+      state.user = userResponse.user;
+    });
+    builder.addCase(login.rejected, (state, { payload: error }) => {
       state.loginLoading = false;
       state.loginError = error || null;
     });
@@ -55,7 +60,7 @@ export const usersSlice = createSlice({
 export const usersReducer = usersSlice.reducer;
 
 export const selectUser = (state: RootState) => state.users.user;
-export const selectRegisterLoading = (state: RootState) => state.users.registerLoading;
 export const selectRegisterError = (state: RootState) => state.users.registerError;
-export const selectLoginLoading = (state: RootState) => state.users.loginLoading;
-export const selectLoginError = (state: RootState) => state.users.loginError
+export const selectLoginError = (state: RootState) => state.users.loginError;
+
+export const { unsetUser } = usersSlice.actions;
