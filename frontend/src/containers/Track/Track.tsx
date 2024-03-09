@@ -16,7 +16,6 @@ const Track = () => {
   const {id} = useParams();
 
   useEffect(() => {
-    console.log(id);
     if (id) {
       dispatch(fetchTracks(id));
     }

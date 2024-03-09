@@ -19,8 +19,6 @@ const Album = () => {
     }
   }, [dispatch, id]);
 
-  console.log(albums);
-
   return (
     <div>
       <Grid container direction="column" spacing={2}>

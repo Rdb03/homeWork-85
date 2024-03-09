@@ -77,7 +77,7 @@ artistRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, re
         }
 
         await Artist.findByIdAndUpdate(id, {
-            isPublished: !artist.isPublished,
+            isPublished: req.body.isPublished,
         });
 
         return res.send(artist);

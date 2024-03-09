@@ -17,8 +17,6 @@ const ArtistForm = () => {
     info: '',
   });
 
-  console.log(user);
-
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -35,7 +33,10 @@ const ArtistForm = () => {
         image: file ? file : null,
       };
 
-      await dispatch(createArtist(newArtist)).unwrap();
+      if (user) {
+        const token = user.token
+        await dispatch(createArtist({ artistMutation: newArtist, token })).unwrap();
+      }
       navigate('/');
     } catch (e) {
       console.log(e);
@@ -98,7 +99,7 @@ const ArtistForm = () => {
             onChange={onChange}
           />
         </Grid>
-        <Button type="submit">
+        <Button sx={{marginTop: '30px'}} variant="contained" type="submit">
           Send
         </Button>
       </form>

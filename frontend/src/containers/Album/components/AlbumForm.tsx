@@ -6,6 +6,7 @@ import { selectUser } from '../../../app/usersSlice.ts';
 import { fetchArtist } from '../../../app/artistThunk.ts';
 import { createAlbum } from '../../../app/albumThunk.ts';
 import { Button, Grid, Typography } from '@mui/material';
+import FileInput from '../../../components/FileInput/FileInput.tsx';
 
 const AlbumForm = () => {
   const artists = useAppSelector(selectArtists);
@@ -38,8 +39,11 @@ const AlbumForm = () => {
         image: file ? file : null,
       };
 
-        await dispatch(createAlbum(newAlbum)).unwrap();
-      navigate('/');
+      if(user) {
+        const token = user.token
+        await dispatch(createAlbum({albumMutation: newAlbum, token})).unwrap();
+        navigate('/');
+      }
     } catch (e) {
       console.log(e);
     }
@@ -60,7 +64,7 @@ const AlbumForm = () => {
 
   return (
     <Grid>
-      <Typography>Album addition</Typography>
+      <Typography sx={{fontSize: '50px'}}>Album addition</Typography>
       <form onSubmit={onFormSubmit}>
         <Grid>
           <input
@@ -70,6 +74,13 @@ const AlbumForm = () => {
             value={state.name}
             name="name"
             placeholder="Enter name"
+            style={{
+              width: '300px',
+              height: '40px',
+              padding: '5px',
+              boxSizing: 'border-box',
+              margin: '10px'
+            }}
           />
           <input
             id="date"
@@ -78,12 +89,26 @@ const AlbumForm = () => {
             value={state.date}
             name="date"
             placeholder="Enter date"
+            style={{
+              width: '300px',
+              height: '40px',
+              padding: '5px',
+              boxSizing: 'border-box',
+              margin: '10px'
+            }}
           />
           <select
             id="select"
             name="artist"
             value={state.artist}
             onChange={inputChangeHandler}
+            style={{
+              width: '300px',
+              height: '40px',
+              padding: '5px',
+              boxSizing: 'border-box',
+              margin: '10px'
+            }}
           >
             <option value="" disabled>
               Select an artist
@@ -94,21 +119,15 @@ const AlbumForm = () => {
               </option>
             ))}
           </select>
-          <input
-            type="file"
-            name="file"
-            id="file"
-            onChange={onChange}
-          />
+          <Grid item>
+            <FileInput
+              label="Image"
+              name="image"
+              onChange={onChange}
+            />
+          </Grid>
         </Grid>
-        <label htmlFor="file">
-          {file ? (
-            <img src={file ? URL.createObjectURL(file) : ''} alt=""/>
-          ) : (
-            <span>Upload file</span>
-          )}
-        </label>
-        <Button type="submit">
+        <Button sx={{marginTop: '30px'}} variant="contained" type="submit">
           Send
         </Button>
       </form>

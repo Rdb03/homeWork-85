@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AlbumMutation, IAlbum } from '../../type';
 import axiosApi from '../../axiosApi.ts';
+import { RootState } from './store.ts';
 
 export const fetchAlbums = createAsyncThunk<IAlbum[], string>(
   'albums/fetchAlbums',
@@ -10,34 +11,33 @@ export const fetchAlbums = createAsyncThunk<IAlbum[], string>(
   },
 );
 
-export const fetchAlbumById = createAsyncThunk<IAlbum, string | undefined>(
-  'album/fetchById',
-  async (albumId) => {
-    console.log('dsfnsjnf')
-    const response = await axiosApi.get<IAlbum>(`/albums/${albumId}`);
-    return response.data;
-  }
-);
-
 export const fetchAllAlbums = createAsyncThunk<IAlbum[]>('albums/fetchAllAlbums', async () => {
   const response = await axiosApi.get<IAlbum[]>('albums');
   return response.data;
 });
 
-export const createAlbum = createAsyncThunk<void, AlbumMutation>(
-  'albums/createAlbum',
-  async (albumMutation) => {
-    const formData = new FormData();
-    const keys = Object.keys(albumMutation) as (keyof AlbumMutation)[];
+export const createAlbum = createAsyncThunk<void, {albumMutation: AlbumMutation, token: string}, {state: RootState}>(
+  'artist/createArtist',
+  async ({albumMutation, token}, _thunkAPI) => {
+    try {
+      const response = await axiosApi.post('/albums', albumMutation, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
-    keys.forEach((key) => {
-      const value = albumMutation[key];
-
-      if (value !== null) {
-        formData.append(key, value);
-      }
-    });
-
-    await axiosApi.post('/albums', formData);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating track:', error);
+      throw error;
+    }
   },
 );
+
+export const patchAlbums = createAsyncThunk<void, string>('albums/patchAlbums', async (id) => {
+  await axiosApi.patch(`/albums/${id}/togglePublished`);
+});
+
+export const deleteAlbum = createAsyncThunk<void, string>('albums/deleteAlbum', async (id) => {
+  await axiosApi.delete(`/albums/${id}`);
+});

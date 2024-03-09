@@ -1,6 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import { ArtistMutation, IAlbum, IArtist } from '../../type';
 import axiosApi from '../../axiosApi.ts';
+import { RootState } from './store.ts';
 
 export const fetchArtist = createAsyncThunk<IArtist[]>(
     'artist/fetchAll',
@@ -18,21 +19,59 @@ export const fetchArtistName = createAsyncThunk<IAlbum, string>(
   },
 );
 
-export const createArtist = createAsyncThunk<void, ArtistMutation>(
+export const createArtist = createAsyncThunk<void, {artistMutation: ArtistMutation, token: string}, {state: RootState}>(
   'artist/createArtist',
-  async (artistMutation) => {
-    const formData = new FormData();
-    const keys = Object.keys(artistMutation) as (keyof ArtistMutation)[];
+  async ({artistMutation, token}, _thunkAPI) => {
+    try {
+      const response = await axiosApi.post('/artist', artistMutation, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
-    keys.forEach((key) => {
-      const value = artistMutation[key];
-
-      if (value !== null) {
-        formData.append(key, value);
-      }
-    });
-
-    await axiosApi.post('/artist', formData);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating track:', error);
+      throw error;
+    }
   },
 );
+
+export const deleteArtist = createAsyncThunk<void, { id: string, token: string | undefined }>(
+  'artists/deleteArtist',
+  async ({ id, token }) => {
+    try {
+      const response = await axiosApi.delete(`/artist/${id}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting artist:', error);
+      throw error;
+    }
+  }
+);
+
+export const patchArtists = createAsyncThunk<void, { id: string, token: string}>(
+  'artists/patchArtists',
+  async ({id, token}) => {
+    try {
+      console.log(token);
+      const response = await axiosApi.patch(`/artist/${id}/togglePublished`,  {isPublished: true},{
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting artist:', error);
+      throw error;
+    }
+  });
+
+
 
