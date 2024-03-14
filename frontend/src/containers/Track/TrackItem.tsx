@@ -4,6 +4,7 @@ import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutline
 import { postTrack } from '../../app/trackHistoryThunk.ts';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectUser } from '../../app/usersSlice.ts';
+import { deleteTrack, fetchTracks, patchTrack } from '../../app/trackThunk.ts';
 
 interface Props {
   name: string;
@@ -16,6 +17,9 @@ interface Props {
 const TrackItem: React.FC<Props> = (props) => {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
+  const id = props.id;
+  const url = window.location.href;
+  const idAlbum = url.substring(url.lastIndexOf('/') + 1);
 
   const goPostTrack = () => {
 
@@ -28,6 +32,22 @@ const TrackItem: React.FC<Props> = (props) => {
     };
 
     dispatch(postTrack(track));
+  };
+
+  const trackDelete = async () => {
+    if(user) {
+      const token = user.token;
+      await dispatch(deleteTrack({id, token}));
+      await dispatch(fetchTracks(idAlbum));
+    }
+  };
+
+  const trackPatch = async () => {
+    if(user) {
+      const token = user.token;
+      await dispatch(patchTrack({id, token}));
+      await dispatch(fetchTracks(idAlbum));
+    }
   };
 
   return (
@@ -55,13 +75,13 @@ const TrackItem: React.FC<Props> = (props) => {
           <p>{props.duration}</p>
           {user?.role === 'admin' ?
             <Grid>
-              <Button variant="outlined" color="error">Delete</Button>
+              <Button variant="outlined" color="error" onClick={trackDelete}>Delete</Button>
             </Grid>
             : null
           }
           {user?.role === 'admin' && !props.isPublished ?
             <Grid>
-              <Button variant="contained" color="success">Publish</Button>
+              <Button variant="contained" color="success" onClick={trackPatch}>Publish</Button>
             </Grid>
             : null
           }

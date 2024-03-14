@@ -3,8 +3,9 @@ import imageNotAvailable from '../../assets/images/image_not_available.png';
 import { apiURL } from '../../../constants.ts';
 import { Link } from 'react-router-dom';
 import React from 'react';
-import { useAppSelector } from '../../app/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectUser } from '../../app/usersSlice.ts';
+import { deleteAlbum, fetchAlbums, patchAlbum } from '../../app/albumThunk.ts';
 
 const ImageCardMedia = styled(CardMedia)({
   height: 0,
@@ -21,6 +22,9 @@ interface Props {
 
 
 const AlbumItem: React.FC<Props> = ({id, image, name, date, isPublished}) => {
+  const dispatch = useAppDispatch();
+  const url = window.location.href;
+  const idArtist = url.substring(url.lastIndexOf('/') + 1);
   const user = useAppSelector(selectUser);
   let cardImage = imageNotAvailable;
 
@@ -28,28 +32,45 @@ const AlbumItem: React.FC<Props> = ({id, image, name, date, isPublished}) => {
     cardImage = apiURL + '/' + image;
   }
 
+  const albumDelete = async () => {
+    if(user) {
+      const token = user.token;
+      await dispatch(deleteAlbum({id, token}));
+      await dispatch(fetchAlbums(idArtist));
+    }
+  };
+
+  const albumPatch = async () => {
+    if(user) {
+      const token = user.token;
+      await dispatch(patchAlbum({id, token}));
+      await dispatch(fetchAlbums(idArtist));
+    }
+  };
+
   return (
     <Grid
       item sm md={6} lg={4}
-      component={Link} to={'/tracks/' + id}
       sx={{textDecoration: 'none', margin: '20px auto'}}
     >
-      {user?.role === 'admin' ?
-        <Grid>
-          <Button variant="outlined" color="error">Delete</Button>
-        </Grid>
-        : null
-      }
-      {user?.role === 'admin' && !isPublished ?
-        <Grid>
-          <Button variant="contained" color="success">Publish</Button>
-        </Grid>
-        : null
-      }
-      <Card sx={{height: '100%'}}>
+      <Grid sx={{display: 'flex'}}>
         <CardHeader sx={{marginLeft: 'auto'}} title={name}/>
         <Typography sx={{marginLeft: 'auto', color: 'red'}}>{!isPublished ? 'unpublished' : null}</Typography>
         <p>{date} г.</p>
+        {user?.role === 'admin' ?
+          <Grid>
+            <Button variant="outlined" color="error" onClick={albumDelete} >Delete</Button>
+          </Grid>
+          : null
+        }
+        {user?.role === 'admin' && !isPublished ?
+          <Grid>
+            <Button variant="contained" color="success" onClick={albumPatch}>Publish</Button>
+          </Grid>
+          : null
+        }
+      </Grid>
+      <Card component={Link} to={'/tracks/' + id} sx={{height: '100%'}}>
         <ImageCardMedia image={cardImage} title={name}/>
       </Card>
     </Grid>

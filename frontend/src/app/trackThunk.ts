@@ -29,10 +29,37 @@ export const createTrack = createAsyncThunk<void, { trackMutation: TrackMutation
   },
 );
 
-export const patchTracks = createAsyncThunk<void, string>('tracks/patchTracks', async (id) => {
-  await axiosApi.patch(`/tracks/${id}/togglePublished`);
-});
+export const patchTrack = createAsyncThunk<void, { id: string, token: string}>(
+  'artists/patchArtists',
+  async ({id, token}) => {
+    try {
+      const response = await axiosApi.patch(`/tracks/${id}/togglePublished`,  {isPublished: true},{
+        headers: {
+          Authorization: token,
+        },
+      });
 
-export const deleteTrack = createAsyncThunk<void, string>('tracks/deleteTrack', async (id) => {
-  await axiosApi.delete(`/tracks/${id}`);
-});
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting artist:', error);
+      throw error;
+    }
+  });
+
+export const deleteTrack = createAsyncThunk<void, { id: string, token: string | undefined }>(
+  'artists/deleteArtist',
+  async ({ id, token }) => {
+    try {
+      const response = await axiosApi.delete(`/tracks/${id}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting artist:', error);
+      throw error;
+    }
+  }
+);

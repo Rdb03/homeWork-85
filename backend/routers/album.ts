@@ -13,11 +13,11 @@ albumRouter.get('/', async (req, res) => {
         const artist = req.query.artist as string;
 
         if (!artist) {
-            const albums = await Album.find({ isPublished: true }).populate('artist', 'name');
+            const albums = await Album.find().populate('artist', 'name');
             return res.send(albums);
         }
 
-        const albums = await Album.find({ artist: { _id: artist }, isPublished: true })
+        const albums = await Album.find({ artist: { _id: artist }})
             .sort({ date: -1 })
             .populate('artist', 'name');
 

@@ -11,8 +11,6 @@ const Artist = () => {
     const user = useAppSelector(selectUser);
     const artists = useAppSelector(selectArtists);
 
-    console.log(artists);
-
     useEffect(() => {
         dispatch(fetchArtist());
     }, [dispatch]);

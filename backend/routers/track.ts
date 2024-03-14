@@ -1,9 +1,8 @@
 import express from "express";
 import Track from "../models/Track";
 import mongoose from "mongoose";
-import auth, {RequestWithUser} from "../middleware/auth";
+import auth from "../middleware/auth";
 import permit from "../middleware/permit";
-import User from "../models/User";
 
 const trackRouter = express.Router();
 
@@ -12,7 +11,7 @@ trackRouter.get('/', async (req, res) => {
         const album = req.query.album as string;
 
         if (!album) {
-            const tracks = await Track.find({ isPublished: true }).populate('album', 'name');
+            const tracks = await Track.find().populate('album', 'name');
             return res.send(tracks);
         }
 

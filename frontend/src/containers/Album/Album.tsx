@@ -28,7 +28,7 @@ const Album = () => {
           </Grid>
         </Grid>
         <Grid item container spacing={2}>
-          {albums ? albums.map(album => (
+          {albums.map((album) => (
             (user?.role !== 'admin' ? album.isPublished : album)  && <AlbumItem
               name={album.name}
               image={album.image}
@@ -37,7 +37,7 @@ const Album = () => {
               id={album._id}
               isPublished={album.isPublished}
             />
-          )) : <h1 style={{margin: '100px auto'}}>Artist no Found</h1>}
+          ))}
         </Grid>
       </Grid>
     </div>

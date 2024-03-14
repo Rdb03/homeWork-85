@@ -34,10 +34,37 @@ export const createAlbum = createAsyncThunk<void, {albumMutation: AlbumMutation,
   },
 );
 
-export const patchAlbums = createAsyncThunk<void, string>('albums/patchAlbums', async (id) => {
-  await axiosApi.patch(`/albums/${id}/togglePublished`);
-});
+export const patchAlbum = createAsyncThunk<void, { id: string, token: string}>(
+  'artists/patchArtists',
+  async ({id, token}) => {
+    try {
+      const response = await axiosApi.patch(`/albums/${id}/togglePublished`,  {isPublished: true},{
+        headers: {
+          Authorization: token,
+        },
+      });
 
-export const deleteAlbum = createAsyncThunk<void, string>('albums/deleteAlbum', async (id) => {
-  await axiosApi.delete(`/albums/${id}`);
-});
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting artist:', error);
+      throw error;
+    }
+  });
+
+export const deleteAlbum = createAsyncThunk<void, { id: string, token: string | undefined }>(
+  'artists/deleteArtist',
+  async ({ id, token }) => {
+    try {
+      const response = await axiosApi.delete(`/albums/${id}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting artist:', error);
+      throw error;
+    }
+  }
+);

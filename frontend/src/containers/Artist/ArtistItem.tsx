@@ -29,7 +29,6 @@ const ArtistItem: React.FC<Props> = ({name, image, id, isPublished}) => {
         cardImage = apiURL + '/' + image;
     }
 
-
   const artistDelete = async () => {
     if(user) {
       const token = user.token;
