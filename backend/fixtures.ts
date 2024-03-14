@@ -26,28 +26,28 @@ const run = async () => {
 
     await User.create(
         {
-            username: 'user1',
+            email: 'user1@spoty.com',
             password: '123456',
             token: crypto.randomUUID(),
             displayName: 'User',
             role: 'user',
             image: null,
         }, {
-            username: 'user2',
+            email: 'user2@spoty.com',
             password: '123456',
             token: crypto.randomUUID(),
             displayName: 'User',
             role: 'user',
             image: null,
         }, {
-            username: 'admin1',
+            email: 'admin1@spoty.com',
             password: '123456',
             token: crypto.randomUUID(),
             displayName: 'Admin',
             role: 'admin',
             image: null,
         }, {
-            username: 'admin2',
+            email: 'admin2@spoty.com',
             password: '123456',
             token: crypto.randomUUID(),
             displayName: 'Admin',

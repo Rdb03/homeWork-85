@@ -41,15 +41,8 @@ export interface ITrackHistory {
 }
 
 export interface RegisterMutation {
-  username: string,
+  email: string,
   password: string,
-}
-
-export interface User {
-  _id: string,
-  username: string,
-  token: string,
-  role: string,
 }
 
 export interface ValidationError {
@@ -66,11 +59,11 @@ export interface ValidationError {
 
 export interface RegisterResponse {
   message: string,
-  user: User,
+  user: IUser,
 }
 
 export interface LoginMutation {
-  username: string,
+  email: string,
   password: string,
 }
 
@@ -95,4 +88,15 @@ export interface TrackMutation {
   duration: string;
   album: string;
   number: number;
+}
+
+export interface IUser {
+  _id: string;
+  email: string;
+  password: string;
+  token: string;
+  role: string;
+  displayName: string;
+  image: string | null;
+  googleID: string;
 }

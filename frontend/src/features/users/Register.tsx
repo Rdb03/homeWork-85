@@ -1,21 +1,23 @@
 import * as React from 'react';
-import { useState } from 'react';
-import { RegisterMutation } from '../../../type';
+import { ChangeEvent, useState } from 'react';
 import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectRegisterError } from '../../app/usersSlice.ts';
-import { register } from '../../app/usersThunk.ts';
+import { googleLogin, register } from '../../app/usersThunk.ts';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Register = () => {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
   const navigate = useNavigate();
 
-  const [state, setState] = useState<RegisterMutation>({
-    username: '',
+  const [file, setFile] = useState<File | null>();
+  const [state, setState] = useState({
+    email: '',
     password: '',
+    displayName: '',
   });
 
   const getFieldError = (fieldName: string) => {
@@ -36,12 +38,30 @@ const Register = () => {
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
+
     try {
-      await dispatch(register(state)).unwrap();
+      const newUser = {
+        email: state.email,
+        displayName: state.displayName,
+        password: state.password,
+        image: file ? file : null,
+      };
+
+      await dispatch(register(newUser)).unwrap();
       navigate('/');
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const googleLoginHandler = async (credential: string) => {
+    await dispatch(googleLogin(credential)).unwrap();
+    navigate('/');
+  };
+
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    setFile(event.target.files[0]);
   };
 
   return (
@@ -60,17 +80,40 @@ const Register = () => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
+        <Box>
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              if (credentialResponse.credential) {
+                void googleLoginHandler(credentialResponse.credential);
+              }
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          />
+        </Box>
         <Box component="form" onSubmit={submitFormHandler} sx={{mt: 3}}>
           <Grid container spacing={2}>
+            <Grid item xs={22}>
+              <TextField
+                label="DisplayName"
+                name="displayName"
+                value={state.displayName}
+                onChange={inputChangeHandler}
+                autoComplete="new-displayName"
+                error={Boolean(getFieldError('displayName'))}
+                helperText={getFieldError('displayName')}
+              />
+            </Grid>
             <Grid item xs={12}>
               <TextField
-                label="Username"
-                name="username"
-                value={state.username}
+                label="E-mail"
+                name="email"
+                value={state.email}
                 onChange={inputChangeHandler}
-                autoComplete="new-username"
-                error={Boolean(getFieldError('username'))}
-                helperText={getFieldError('username')}
+                autoComplete="new-email"
+                error={Boolean(getFieldError('email'))}
+                helperText={getFieldError('email')}
               />
             </Grid>
             <Grid item xs={12}>
@@ -85,6 +128,20 @@ const Register = () => {
                 helperText={getFieldError('password')}
               />
             </Grid>
+            <input
+              className="file-register-input"
+              type="file"
+              name="file"
+              id="fileReg"
+              onChange={onChange}
+            />
+            <label className="label-file-register" htmlFor="fileReg">
+              {file ? (
+                <img src={file ? URL.createObjectURL(file) : ''} alt="" />
+              ) : (
+                <span>Загрузить аватар</span>
+              )}
+            </label>
           </Grid>
           <Button
             type="submit"

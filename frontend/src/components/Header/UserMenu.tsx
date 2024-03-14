@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { User } from '../../../type';
+import { IUser } from '../../../type';
 import { Link } from 'react-router-dom';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { Button, Grid, Menu, MenuItem } from '@mui/material';
 import { logout } from '../../app/usersThunk.ts';
 import { useAppDispatch } from '../../app/hooks.ts';
 import { unsetUser } from '../../app/usersSlice.ts';
+import { apiURL } from '../../../constants.ts';
+import noImage from '../../assets/images/image_not_available.png';
 
 interface Props {
-  user: User;
+  user: IUser;
 }
 
 const UserMenu: React.FC<Props> = ({user}) => {
@@ -29,9 +31,16 @@ const UserMenu: React.FC<Props> = ({user}) => {
 
   return (
     <>
-     <Button color="inherit" onClick={handleClick}>
-       Hello, {user.username}!
-     </Button>
+      <Grid className="user-info" sx={{display: 'flex', alignItems: 'center'}}>
+        {user?.googleID ? (
+          <img style={{width: '100px'}} src={user?.image ? user?.image : noImage} alt="img"/>
+        ) : (
+          <img style={{width: '100px'}} src={user?.image ? apiURL + '/' + user?.image : noImage} alt="img"/>
+        )}
+        <Button color="inherit" onClick={handleClick}>
+          Hello, {user.displayName ? user.displayName : user.email}!
+        </Button>
+      </Grid>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem>
           <Link to={'/track_history'} style={{color: 'black', textDecoration: 'none'}}>Track History</Link>

@@ -6,7 +6,8 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectLoginError } from '../../app/usersSlice.ts';
-import { login } from '../../app/usersThunk.ts';
+import { googleLogin, login } from '../../app/usersThunk.ts';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -14,7 +15,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   const [state, setState] = useState<LoginMutation>({
-    username: '',
+    email: '',
     password: '',
   });
 
@@ -30,6 +31,11 @@ const Register = () => {
     event.preventDefault();
 
     await dispatch(login(state)).unwrap();
+    navigate('/');
+  };
+
+  const googleLoginHandler = async (credential: string) => {
+    await dispatch(googleLogin(credential)).unwrap();
     navigate('/');
   };
 
@@ -55,17 +61,26 @@ const Register = () => {
           </Alert>
         )}
         <Box>
-
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              if (credentialResponse.credential) {
+                void googleLoginHandler(credentialResponse.credential);
+              }
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          />
         </Box>
         <Box component="form" onSubmit={submitFormHandler} sx={{mt: 3}}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                label="Username"
-                name="username"
-                value={state.username}
+                label="E-Mail"
+                name="email"
+                value={state.email}
                 onChange={inputChangeHandler}
-                autoComplete="current-username"
+                autoComplete="current-email"
               />
             </Grid>
             <Grid item xs={12}>

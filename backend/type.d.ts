@@ -1,37 +1,20 @@
 import {Model} from "mongoose";
 
 export interface IUser {
-    username: string;
+    email: string;
     password: string;
     token: string;
     role: string;
 }
 
-export interface ArtistMutation {
-    name: string,
-    image: string | null,
-    info: string,
-}
-
-export interface AlbumMutation {
-    name: string,
-    artist: string,
-    date: string,
-    image: string | null,
-}
-
-export interface TrackMutation {
-    name: string,
-    album: string,
-    duration: string,
-    number: number,
-}
-
 export interface UserFields {
-    username: string,
+    email: string,
     password: string,
     token: string,
     role: string,
+    displayName: string;
+    googleID?: string;
+    image: string | null;
 }
 
 export interface ITrackHistory {
