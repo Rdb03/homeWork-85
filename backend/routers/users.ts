@@ -97,6 +97,10 @@ userRouter.post('/google', imagesUpload.single('image'), async (req, res, next) 
         let user = await User.findOne({ googleID: id });
 
         if (!user) {
+            user = await User.findOne({ email: email });
+        }
+
+        if (!user) {
             user = new User({
                 email: email,
                 password: crypto.randomUUID(),
@@ -105,8 +109,8 @@ userRouter.post('/google', imagesUpload.single('image'), async (req, res, next) 
                 displayName,
             });
         }
-        user.generateToken();
 
+        user.generateToken();
         await user.save();
 
         return res.send({ message: 'Login with Google successful!', user });
@@ -114,6 +118,8 @@ userRouter.post('/google', imagesUpload.single('image'), async (req, res, next) 
         return next(e);
     }
 });
+
+
 
 
 export default userRouter;
