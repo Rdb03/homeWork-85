@@ -6,7 +6,7 @@ import { logout } from '../../app/usersThunk.ts';
 import { useAppDispatch } from '../../app/hooks.ts';
 import { unsetUser } from '../../app/usersSlice.ts';
 import { apiURL } from '../../../constants.ts';
-import noImage from '../../assets/images/image_not_available.png';
+import noImage from '../../assets/images/no-image.jpg';
 
 interface Props {
   user: IUser;
