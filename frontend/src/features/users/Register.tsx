@@ -128,20 +128,22 @@ const Register = () => {
                 helperText={getFieldError('password')}
               />
             </Grid>
-            <input
-              className="file-register-input"
-              type="file"
-              name="file"
-              id="fileReg"
-              onChange={onChange}
-            />
-            <label className="label-file-register" htmlFor="fileReg">
-              {file ? (
-                <img src={file ? URL.createObjectURL(file) : ''} alt="" />
-              ) : (
-                <span>Загрузить аватар</span>
-              )}
-            </label>
+            <Grid sx={{display: 'flex', alignItems: 'center', marginTop: '30px'}}>
+              <input
+                className="file-register-input"
+                type="file"
+                name="file"
+                id="fileReg"
+                onChange={onChange}
+              />
+              <label className="label-file-register" htmlFor="fileReg">
+                {file ? (
+                  <img src={file ? URL.createObjectURL(file) : ''} alt=""/>
+                ) : (
+                  <span>Загрузить аватар</span>
+                )}
+              </label>
+            </Grid>
           </Grid>
           <Button
             type="submit"

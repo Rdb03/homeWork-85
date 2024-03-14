@@ -29,6 +29,8 @@ const UserMenu: React.FC<Props> = ({user}) => {
     dispatch(unsetUser());
   };
 
+  console.log(user);
+
   return (
     <>
       <Grid className="user-info" sx={{display: 'flex', alignItems: 'center'}}>
