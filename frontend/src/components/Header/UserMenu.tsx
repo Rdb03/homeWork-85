@@ -29,15 +29,13 @@ const UserMenu: React.FC<Props> = ({user}) => {
     dispatch(unsetUser());
   };
 
-  console.log(user);
-
   return (
     <>
       <Grid className="user-info" sx={{display: 'flex', alignItems: 'center'}}>
         {user?.googleID ? (
-          <img style={{width: '100px'}} src={user?.image ? user?.image : noImage} alt="img"/>
+          <img style={{width: '50px', borderRadius: '100px'}} src={user?.image ? user?.image : noImage} alt="img"/>
         ) : (
-          <img style={{width: '100px'}} src={user?.image ? apiURL + '/' + user?.image : noImage} alt="img"/>
+          <img style={{width: '50px', borderRadius: '100px'}} src={user?.image ? apiURL + '/' + user?.image : noImage} alt="img"/>
         )}
         <Button color="inherit" onClick={handleClick}>
           Hello, {user.displayName ? user.displayName : user.email}!

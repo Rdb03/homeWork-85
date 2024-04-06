@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectRegisterError } from '../../app/usersSlice.ts';
 import { googleLogin, register } from '../../app/usersThunk.ts';
 import { GoogleLogin } from '@react-oauth/google';
+import FileInput from '../../components/FileInput/FileInput.tsx';
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -128,22 +129,13 @@ const Register = () => {
                 helperText={getFieldError('password')}
               />
             </Grid>
-            <Grid sx={{display: 'flex', alignItems: 'center', marginTop: '30px'}}>
-              <input
-                className="file-register-input"
-                type="file"
-                name="file"
-                id="fileReg"
-                onChange={onChange}
-              />
-              <label className="label-file-register" htmlFor="fileReg">
-                {file ? (
-                  <img src={file ? URL.createObjectURL(file) : ''} alt=""/>
-                ) : (
-                  <span>Загрузить аватар</span>
-                )}
-              </label>
-            </Grid>
+          </Grid>
+          <Grid sx={{marginTop: '20px'}}>
+            <FileInput
+              label="Image"
+              name="image"
+              onChange={onChange}
+            />
           </Grid>
           <Button
             type="submit"

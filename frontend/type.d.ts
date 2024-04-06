@@ -6,15 +6,6 @@ export interface IArtist {
     isPublished: boolean
 }
 
-export interface IAlbum {
-  _id: string,
-  name: string,
-  artist: IArtist,
-  date: number,
-  image: string | null,
-  isPublished: boolean
-}
-
 export interface ITrack {
   _id: string,
   name: string,
@@ -75,6 +66,15 @@ export interface AlbumMutation {
   date: string;
   artist: string;
   image: File | null;
+}
+
+export interface IAlbum {
+  _id: string,
+  name: string,
+  artist: IArtist,
+  date: number,
+  image: string | null,
+  isPublished: boolean
 }
 
 export interface ArtistMutation {

@@ -1,15 +1,18 @@
 import path from 'path';
-import { configDotenv } from "dotenv";
+import {configDotenv} from "dotenv";
 
-configDotenv();
+const envFile = process.env['NODE_ENV'] ? `.env.${process.env['NODE_ENV']}` : '.env';
+
+configDotenv({path: envFile});
 
 const rootPath = __dirname;
 
 const config = {
     rootPath,
+    port: parseInt(process.env['PORT'] || '8000'),
     publicPath: path.join(rootPath, 'public'),
     mongoose: {
-        db: 'mongodb://localhost/player',
+        db: process.env['MONGO_DB_URL'] || 'mongodb://localhost/player',
     },
     google: {
         clientId: process.env['GOOGLE_CLIENT_ID'],
